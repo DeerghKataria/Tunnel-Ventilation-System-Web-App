@@ -1,0 +1,76 @@
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .ClientInput, .EndButtons{
+    float: left;
+  }
+
+  .ProjectDetails {
+    margin: 10px;
+    width: 500px;
+  }
+  
+  .InputDetails {
+    margin: 10px;
+    width: 500px;
+  }
+  
+  .OutputDetails {
+    margin: 10px;
+    width: 500px;
+  }
+  
+  .ProjectDetails, .InputDetails, .OutputDetails {
+    float: left;
+  }
+
+  
+  h1 {
+    text-align: center;
+  }
+  
+  h2 {
+    text-align: center;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .column {
+    margin-bottom: 10px;
+  }
+  
+  .Calculate, .Save, .Update {
+    background-color: #000;
+    color: #fff;
+    padding: 2px;
+    border: none;
+    margin: 30px;
+    cursor: pointer;
+    text-align: center;
+    width: 100px;
+    float: left;
+  }
+  
+  .Calculate:hover, .Save:hover, .Update:hover {
+    background-color: #339966;
+  }
+  
+  /* Center the buttons at the bottom */
+  .EndButtons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  

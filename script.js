@@ -221,7 +221,6 @@ fricCoeffInt = parseFloat(
     totalPressureLoss.toFixed(2);
   document.getElementById("MinimumInstCapacity").value = kw.toFixed(2);
 
-  console.log(document.querySelector("#Leakage").value);
 
   fetch('http://localhost:35735/save-calculations', {
   method: 'POST',
@@ -255,9 +254,18 @@ function getCalculatedValues() {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-document.getElementById('Save').addEventListener('click', function() {
-  fetch('http://localhost:35735/generate-pdf', {
-    method: 'POST',
+  document.getElementById('Save').addEventListener('click', function() {
+    fetch('http://localhost:35735/save-calculations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(getCalculatedValues()),
+    }).then(() => {
+      // Open the PDF in a new tab
+      window.open('http://localhost:35735/generate-pdf', '_blank');
+    });
   });
-});
+  
+  
 });

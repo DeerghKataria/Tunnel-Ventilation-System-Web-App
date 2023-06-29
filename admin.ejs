@@ -18,17 +18,20 @@
   <div class="header">
     <h1>Projects</h1>
     <button onclick="location.href='/logout'">Logout</button>
+    <button onclick="location.href='/index.html'">Calculate</button>
   </div>
 
   <div class="table-container">
     <table>
       <tr>
+        <th>Date</th>
         <th>Project Name</th>
         <th>Link</th>
       </tr>
       <% for(let i=0; i<projects.length; i++) { %>
         <% if (projects[i].calculations && projects[i].calculations.projectName) { %>
           <tr>
+            <td><%= projects[i].calculations.projectDate %></td>
             <td><%= projects[i].calculations.projectName %></td>
             <td><a href="<%= projects[i].pdfUrl %>" target="_blank">Download PDF</a></td>
           </tr>

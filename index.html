@@ -15,7 +15,7 @@
             <h2>PROJECT PARAMETERS</h2>
             <div class="Company Name" style="margin: 10px;">
                 <label for="Company Name">Company Name</label>
-                <input type="text" id="Company Name" name="Company Name" />
+                <input type="text" id="CompanyName" name="Company Name" />
             </div>
 
             <div class="Project Name" style="margin: 10px;">
@@ -25,7 +25,7 @@
 
             <div class="Tunnel Name" style="margin: 10px;">
                 <label for="Tunnel Name">Tunnel Name</label>
-                <input type="text" id="Tunnel Name" name="Tunnel Name" />
+                <input type="text" id="TunnelName" name="Tunnel Name" />
             </div>
 
             <div class="TypeofExcavation" style="margin: 10px;">
@@ -45,15 +45,15 @@
 
             <div class="Project Date" style="margin: 10px;">
                 <label for="Project Date">Project Date</label>
-                <input type="text" id="Project Date" name="Project Date" />
+                <input type="text" id="ProjectDate" name="Project Date" />
             </div>
 
             <div class="Duct Classification" style="margin: 10px;">
                 <label for="Duct Classification">Duct Classification</label>
                 <select name="Duct Classification">
-                <option value="Option1">Option1</option>
-                <option value="Option2">Option2</option>
-                <option value="Option3">Option3</option>
+                <option value="Option1">A</option>
+                <option value="Option2">B</option>
+                <option value="Option3">X</option>
                 </select>
             </div>
 
@@ -86,7 +86,7 @@
             </div>
 
             <div class="SiteHeightM" style="margin: 10px;">
-                <label for="SiteHeightM">Site Height M</label>
+                <label for="SiteHeightM">Site Height [m]</label>
                 <input type="text" id="SiteHeightM" name="SiteHeightM" />
             </div>
 
@@ -106,12 +106,12 @@
             </div>
 
             <div class="DuctLength" style="margin: 10px;">
-                <label for="DuctLength">Duct Length [M]"</label>
+                <label for="DuctLength">Duct Length [m]"</label>
                 <input type="text" id="DuctLength" name="DuctLength" />
             </div>
             
             <div class="DuctDiameter" style="margin: 10px;">
-                <label for="DuctDiameter">Duct Diameter</label>
+                <label for="DuctDiameter">Duct Diameter [m]</label>
                 <input type="text" id="DuctDiameter" name="DuctDiameter" />
             </div>
 
@@ -155,12 +155,12 @@
             </div>
             
             <div class="StatPressureLoss" style="margin: 10px;">
-                <label for="StatPressureLoss">Stat. Pressure Loss [PA]</label>
+                <label for="StatPressureLoss">Stat. Pressure Loss [Pa]</label>
                 <input type="text" id="StatPressureLoss" name="StatPressureLoss" />
             </div>
 
             <div class="DynPressureLoss" style="margin: 10px;">
-                <label for="DynPressureLoss">Dyn. Pressure Loss [PA]"</label>
+                <label for="DynPressureLoss">Dyn. Pressure Loss [Pa]"</label>
                 <input type="text" id="DynPressureLoss" name="DynPressureLoss" />
             </div>
             
@@ -170,7 +170,7 @@
             </div>
 
             <div class="TotalPressureLoss" style="margin: 10px;">
-                <label for="TotalPressureLoss">Total Pressure Loss [PA]</label>
+                <label for="TotalPressureLoss">Total Pressure Loss [Pa]</label>
                 <input type="text" id="TotalPressureLoss" name="TotalPressureLoss" />
             </div>
 
@@ -202,7 +202,9 @@
 
     <div class="Logout">
         <button onclick="location.href='/logout'">Logout</button>
+        <button id="adminPanel" style="display: none;" onclick="location.href='/admin'">Admin Panel</button>
     </div>
+    
 
    
 </body>

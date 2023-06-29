@@ -186,8 +186,8 @@ app.post("/save-calculations", async (req, res) => {
     const calculations = db.collection('Calculations');
     
     const result = await calculations.insertOne({
-      data: calculations, 
-      createdAt: new Date(),
+      data: calculationsData,
+      createdAt: new Date()
     });
 
     console.log('Inserted document with ID:', result.insertedId); // log the id of the inserted document
@@ -263,4 +263,52 @@ app.post('/save-project', async (req, res) => {
   } finally {
     await client.close();
   }
+});
+
+
+app.get('/api/user', function (req, res) {
+  if (req.session && req.session.user) {
+    res.json(req.session.user);
+  } else {
+    res.json({});
+  }
+});
+
+
+app.post('/new-project', async (req, res) => {
+
+  const client = new MongoClient(url);
+
+  await client.connect();
+  const db = client.db(dbName);
+  const collection = db.collection('Projects');
+  const counters = db.collection('Counter');
+
+  // Generate a unique project number
+  // Use the current date and a sequence number from the database
+  const date = new Date();
+  const counter = await counters.findOneAndUpdate(
+    { _id: 'projectNumber' },
+    { $inc: { seq: 1 } },
+    { returnOriginal: false }
+  );
+
+  const projectNumber = `PRJ${date.getDate().toString().padStart(2, '0')}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getFullYear()}-${counter.value.seq}`;
+
+  // Create a new project in the database
+  const project = {
+    projectNumber,
+    // Add any other properties you need for the project
+  };
+
+  try {
+    const result = await collection.insertOne(project);
+    console.log(`Successfully inserted item with _id: ${result.insertedId}`);
+    res.json({ projectNumber: projectNumber });
+  } catch (err) {
+    console.error(`Failed to insert item: ${err}`);
+    res.status(500).json({ error: 'Failed to create new project' });
+  }
+
+  await client.close();
 });

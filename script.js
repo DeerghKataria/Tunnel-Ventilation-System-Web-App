@@ -11,7 +11,7 @@ let zetaLossFactor;
 let lossFactor;
 let airDensity;
 let ldFactor;
-let airVelocityAtFace
+let airVelocityAtFace;
 let FS;
 let a51;
 let pressureFactorInt;
@@ -22,6 +22,8 @@ let additLosses;
 let totalPressureLoss;
 let kw;
 let projectName;
+let projectDate;
+
 function calculateLossFactor() {
   let fricCoeffInt = parseFloat(
       document.getElementById("FrictionCoefficient").value
@@ -151,46 +153,46 @@ function calculateKW(
   );
 }
 function saveCalculations() {
-  fetch('http://localhost:35735/save-calculations', {
-    method: 'POST',
+  fetch("http://localhost:35735/save-calculations", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       calculations: getCalculatedValues(),
     }),
-  }).then(response => {
+  }).then((response) => {
     if (!response.ok) {
-      console.error('Failed to save calculations');
+      console.error("Failed to save calculations");
     }
   });
 }
 
 function saveProject() {
-  fetch('http://localhost:35735/save-project', {
-    method: 'POST',
+  fetch("http://localhost:35735/save-project", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       calculations: getCalculatedValues(),
     }),
-  }).then(response => {
+  }).then((response) => {
     if (!response.ok) {
-      console.error('Failed to save project');
+      console.error("Failed to save project");
     }
   });
 }
 
 function performCalculations() {
- a0 = parseFloat(document.getElementById("AirVolume").value);
+  a0 = parseFloat(document.getElementById("AirVolume").value);
   len = parseFloat(document.getElementById("DuctLength").value);
- dia = parseFloat(document.getElementById("DuctDiameter").value);
-fricCoeffInt = parseFloat(
+  dia = parseFloat(document.getElementById("DuctDiameter").value);
+  fricCoeffInt = parseFloat(
     document.getElementById("FrictionCoefficient").value
   );
   leakage = parseFloat(document.getElementById("Leakage").value);
- siteHeight = parseFloat(document.getElementById("SiteHeightM").value);
+  siteHeight = parseFloat(document.getElementById("SiteHeightM").value);
   temperature = parseFloat(document.getElementById("Temperature").value);
   pressureAtDuctEnd = parseFloat(
     document.getElementById("PressureatDuctEnd").value
@@ -198,40 +200,38 @@ fricCoeffInt = parseFloat(
   ventilatorEfficiency = parseFloat(
     document.getElementById("VentilatorEfficiency").value
   );
-  zetaLossFactor = parseFloat(
-    document.getElementById("ZetaLossFactor").value
-  );
+  zetaLossFactor = parseFloat(document.getElementById("ZetaLossFactor").value);
 
-   lossFactor = calculateLossFactor();
+  lossFactor = calculateLossFactor();
   airDensity = calculateAirDensity(siteHeight, temperature);
-   ldFactor = calculateLdFactor(len, dia);
+  ldFactor = calculateLdFactor(len, dia);
   airVelocityAtFace = calculateAirVelocityAtFace(a0, dia);
   FS = calculateFS(leakage);
   a51 = calculateA51(pressureAtDuctEnd, airDensity, airVelocityAtFace);
-   pressureFactorInt = calculatePressureFactorInt(
+  pressureFactorInt = calculatePressureFactorInt(
     lossFactor,
     fricCoeffInt,
     FS,
     a51
   );
-   ventilatorVolumeSupply = calculateVentilatorVolumeSupply(a0, lossFactor);
+  ventilatorVolumeSupply = calculateVentilatorVolumeSupply(a0, lossFactor);
   statPressureLoss = calculateStatPressureLoss(
     airDensity,
     pressureFactorInt,
     airVelocityAtFace
   );
-   dynPressureLoss = calculateDynPressureLoss(
+  dynPressureLoss = calculateDynPressureLoss(
     airDensity,
     ventilatorVolumeSupply,
     dia
   );
-   additLosses = calculateAdditLosses(zetaLossFactor, dynPressureLoss);
-   totalPressureLoss = calculateTotalPressureLoss(
+  additLosses = calculateAdditLosses(zetaLossFactor, dynPressureLoss);
+  totalPressureLoss = calculateTotalPressureLoss(
     statPressureLoss,
     dynPressureLoss,
     additLosses
   );
-   kw = calculateKW(
+  kw = calculateKW(
     ventilatorVolumeSupply,
     totalPressureLoss,
     ventilatorEfficiency
@@ -252,18 +252,37 @@ fricCoeffInt = parseFloat(
     totalPressureLoss.toFixed(2);
   document.getElementById("MinimumInstCapacity").value = kw.toFixed(2);
   projectName = document.getElementById("ProjectName").value;
-
-
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById("Calculate").addEventListener("click", performCalculations);
+document.addEventListener("DOMContentLoaded", async function () {
+  document.getElementById("Calculate").addEventListener("click", async function () {
+    await performCalculations();
+    saveCalculations();
+  });
 });
-
 
 function getCalculatedValues() {
   // Perform calculations and return the result as an object
   return {
+    companyName: document.getElementById('CompanyName').value,
+    projectName: projectName,
+    tunnelName: document.getElementById('TunnelName').value,
+    excavationType: document.querySelector('select[name="TypeofExcavation"]').value,
+    projectNumber: document.getElementById('ProjectNumber').value,
+    projectDate: projectDate,
+    ductClassification:document.querySelector('select[name="Duct Classification"]').value,
+    application: document.getElementById('Application').value,
+    personIncharge: document.getElementById('PersoninCharge').value,
+    customer: document.getElementById('Customer').value,
+    ductLength: len,
+    ductDiameter: dia,
+    fricCoeffInt: fricCoeffInt,
+    leakage: leakage,
+    siteHeight: siteHeight,
+    temperature: temperature,
+    pressureAtDuctEnd: pressureAtDuctEnd,
+    ventilatorEfficiency: ventilatorEfficiency,
+    zetaLossFactor: zetaLossFactor,
     airDensity: airDensity,
     ldFactor: ldFactor,
     pressureFactor: pressureFactorInt,
@@ -274,20 +293,100 @@ function getCalculatedValues() {
     additLosses: additLosses,
     totalPressureLoss: totalPressureLoss,
     kw: kw,
-    projectName: projectName
+    
   };
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('Save').addEventListener('click', function() {
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("Save").addEventListener("click", function () {
+    const field1 = document.getElementById("ProjectName");
+
     // Saving calculations when Save button clicked
     saveProject();
   });
 });
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('Generate').addEventListener('click', function() {
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("Generate").addEventListener("click", function () {
     // Open the PDF in a new tab
-    saveCalculations();
-    window.open('http://localhost:35735/generate-pdf', '_blank');
+    window.open("http://localhost:35735/generate-pdf", "_blank");
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Getting the field by its ID
+  let projectDateField = document.getElementById("ProjectDate");
+  // Creating a new Date object
+  let currentDate = new Date();
+  // Formatting the date as a string in the YYYY-MM-DD format
+  let formattedDate =
+    currentDate.getDate().toString().padStart(2, "0") +
+    "-" +
+    (currentDate.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    currentDate.getFullYear();
+  // Setting the value of the field to the formatted date
+  projectDateField.value = formattedDate;
+  projectDate = formattedDate;
+});
+
+window.onload = function () {
+  fetch("/api/user")
+    .then((response) => response.json())
+    .then((user) => {
+      const adminPanel = document.getElementById("adminPanel");
+      if (user.isAdmin) {
+        adminPanel.style.display = "block";
+      }
+    });
+
+  document.getElementById("FrictionCoefficient").value = 0.018;
+  document.getElementById("Leakage").value = 10;
+  document.getElementById("SiteHeightM").value = 50;
+  document.getElementById("Temperature").value = 20;
+  document.getElementById("PressureatDuctEnd").value = 100;
+  document.getElementById("VentilatorEfficiency").value = 0.8;
+  document.getElementById("ZetaLossFactor").value = 1;
+};
+
+window.addEventListener("DOMContentLoaded", (event) => {
+  // Get the "Project Name" input field and the buttons
+  const projectNameInput = document.querySelector("#ProjectName");
+  const generatePdfButton = document.querySelector("#Generate");
+  const saveProjectButton = document.querySelector("#Save");
+
+  // Function to check the "Project Name" input field value and enable or disable the buttons
+  const checkProjectName = () => {
+    const isProjectNameEmpty = projectNameInput.value.trim() === "";
+    generatePdfButton.disabled = isProjectNameEmpty;
+    saveProjectButton.disabled = isProjectNameEmpty;
+  };
+
+  // Call the checkProjectName function when the page loads
+  checkProjectName();
+
+  // Add an event listener to the "Project Name" input field to call the checkProjectName function every time the field value changes
+  projectNameInput.addEventListener("input", checkProjectName);
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  window.onload = async () => {
+    try {
+      const response = await fetch('http://localhost:35735/new-project', { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        // Store the project number in session data
+        sessionStorage.setItem('projectNumber', data.projectNumber);
+        console.log(`Project Number: ${data.projectNumber} saved to session.`);
+
+        // Set the value of the ProjectNumber field
+        document.getElementById('ProjectNumber').value = data.projectNumber;
+      } else {
+        console.log('Error: ', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+});
+

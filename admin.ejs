@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Page</title>
+  <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+    }
+    .table-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Projects</h1>
+    <button onclick="location.href='/logout'">Logout</button>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <tr>
+        <th>Project Name</th>
+        <th>Link</th>
+      </tr>
+      <% for(let i=0; i<projects.length; i++) { %>
+        <% if (projects[i].calculations && projects[i].calculations.projectName) { %>
+          <tr>
+            <td><%= projects[i].calculations.projectName %></td>
+            <td><a href="<%= projects[i].pdfUrl %>" target="_blank">Download PDF</a></td>
+          </tr>
+        <% } %>
+      <% } %>
+    </table>
+  </div>
+</body>
+</html>

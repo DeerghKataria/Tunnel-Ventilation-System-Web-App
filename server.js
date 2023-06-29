@@ -8,6 +8,9 @@ const MongoClient = mongodb.MongoClient;
 const session = require("express-session");
 const app = express();
 const bodyParser = require('body-parser');
+const fs = require('fs');
+
+app.use(express.static(path.join(__dirname, 'public'))); // Add this line here
 
 app.use(bodyParser.json()); // support parsing of application/json type post data
 app.use(bodyParser.urlencoded({ extended: true })); //support parsing of application/x-www-form-urlencoded post data
@@ -30,8 +33,7 @@ app.listen(35735, () => {
 });
 
 // User Authentication routes
-const url =
-  "mongodb+srv://hiteshwork0811:AnandMincons@anandmincons.uiornam.mongodb.net/"; // REPLACE WITH YOUR MONGODB URL
+const url = "mongodb+srv://hitesh_khanna:AnandMincons@cluster0.sc5xhui.mongodb.net/";
 const dbName = "AnandMincons"; // REPLACE WITH YOUR DATABASE NAME
 
 app.get("/login", function (req, res) {
@@ -72,7 +74,6 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const client = new MongoClient(url);
-  console.log(req.body);
   try {
       await client.connect();
       const db = client.db(dbName);
@@ -82,8 +83,14 @@ app.post('/login', async (req, res) => {
       if (user) {
           const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
           if (isPasswordCorrect) {
-              req.session.user = user;
-              res.redirect('/index.html');
+              // Save user details and isAdmin flag in the session
+              req.session.user = { username: user.username, isAdmin: user.isAdmin };
+              // Redirect based on user type
+              if (user.isAdmin) {
+                  res.redirect('/admin');
+              } else {
+                  res.redirect('/index.html');
+              }
           } else {
               res.status(401).send({ error: 'Incorrect password' });
           }
@@ -93,6 +100,16 @@ app.post('/login', async (req, res) => {
   } finally {
       await client.close();
   }
+});
+
+app.get('/logout', function(req, res) {
+  req.session.destroy(function(err) {
+      if(err) {
+          console.log(err);
+      } else {
+          res.redirect('/login'); // or redirect to any other page
+      }
+  });
 });
 
 
@@ -107,44 +124,143 @@ function checkAuthenticated(req, res, next) {
 app.use(checkAuthenticated);
 app.use(express.static(path.join(__dirname)));
 
-app.get("/generate-pdf", async (req, res) => {
+app.get('/generate-pdf', async (req, res) => {
+  const client = new MongoClient(url);
+  let calculatedValues = null;
+
   try {
-    // render ejs template and send it as a response
-    res.render(
-      "template",
-      { calculatedValues: calculationsData },
-      async (err, html) => {
-        if (err) throw err;
-
-        // initialize puppeteer
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-
-        // set the HTML content of the new page
-        await page.setContent(html);
-
-        // generate PDF
-        const pdf = await page.pdf({ format: "A4" });
-
-        // close browser
-        await browser.close();
-
-        res.setHeader("Content-Disposition", "inline;"); // display in browser
-        res.setHeader("Content-Type", "application/pdf");
-        res.header("Content-Disposition", "inline; filename=Test.pdf"); // Set your custom file name here
-
-        // send the PDF as a response
-        res.contentType("application/pdf");
-        res.send(pdf);
-      }
-    );
+    await client.connect();
+    const db = client.db(dbName);
+    const calculations = db.collection('Calculations');
+    // Get the latest document in the collection
+    calculatedValues = await calculations.find().sort({ createdAt: -1 }).limit(1).next();
+    console.log('Calc Values');
+    console.log(calculatedValues);
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    console.error('Error retrieving calculations:', err);
+  } finally {
+    await client.close();
+  }
+
+  // Check if calculatedValues.data exists and pass it to the template
+  if (calculatedValues && calculatedValues.data) {
+    res.render('template', { calculatedValues: calculatedValues.data.calculations });
+  } else {
+    res.status(500).send('Error: No data found for PDF generation');
   }
 });
 
-app.post("/save-calculations", (req, res) => {
+
+app.get('/admin', async (req, res) => {
+  // Check if the user is logged in and is an admin
+  if (req.session.user && req.session.user.isAdmin) {
+    const client = new MongoClient(url);
+    try {
+      await client.connect();
+      const db = client.db(dbName);
+      const projects = db.collection('PDF-Data');
+      
+      const allProjects = await projects.find().toArray();
+      console.log(allProjects);  // Add this line
+      res.render('admin', { projects: allProjects });
+    } finally {
+      await client.close();
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+
+
+
+app.post("/save-calculations", async (req, res) => {
+  console.log('Received data:', req.body); // log incoming request data
   calculationsData = req.body; // Save the calculations
+  console.log('Calculations received:', calculationsData); // log saved calculations
+
+  const client = new MongoClient(url);
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const calculations = db.collection('Calculations');
+    
+    const result = await calculations.insertOne({
+      data: calculations, 
+      createdAt: new Date(),
+    });
+
+    console.log('Inserted document with ID:', result.insertedId); // log the id of the inserted document
+  } catch(err) {
+    console.error('Failed to save calculations:', err); // log any errors
+  } finally {
+    await client.close();
+  }
+
   res.sendStatus(200);
+});
+
+
+async function generatePdf(calculatedValues) {
+  return new Promise((resolve, reject) => {
+    // render your ejs template with data
+    ejs.renderFile(path.join(__dirname, 'template.ejs'), { calculatedValues }, async function(err, html){
+      if (err){
+        console.error('Error in rendering ejs:', err);
+        reject(err); // if there is an error, reject the Promise
+      }
+
+      try {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+      
+        await page.setContent(html);
+        const pdfBuffer = await page.pdf({ format: 'A4' });
+      
+        await browser.close();
+
+        resolve(pdfBuffer); // if everything went fine, resolve the Promise with the pdfBuffer
+      } catch (error) {
+        console.error('Error in generating PDF:', error);
+        reject(error); // if there is an error, reject the Promise
+      }
+    });
+  });
+}
+
+
+app.post('/save-project', async (req, res) => {
+  const {calculations } = req.body;
+
+  // Generate and save PDF
+  console.log("Showing Calculations");
+  console.log(calculations);
+  const pdfBuffer = await generatePdf(calculations); // replace this with your PDF generation logic
+
+  // Check if directory exists, if not, create it
+  const dir = path.join(__dirname, 'public', 'pdfs');
+  if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const pdfPath = path.join(dir, `${calculations.projectName}.pdf`);
+  fs.writeFileSync(pdfPath, pdfBuffer);
+
+  const pdfUrl = `/pdfs/${calculations.projectName}.pdf`;
+
+  const client = new MongoClient(url);
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const projects = db.collection('PDF-Data');
+    
+    const result = await projects.insertOne({
+      calculations,
+      pdfUrl
+    });
+
+    res.sendStatus(200);
+  } finally {
+    await client.close();
+  }
 });

@@ -21,7 +21,7 @@ let dynPressureLoss;
 let additLosses;
 let totalPressureLoss;
 let kw;
-
+let projectName;
 function calculateLossFactor() {
   let fricCoeffInt = parseFloat(
       document.getElementById("FrictionCoefficient").value
@@ -150,6 +150,37 @@ function calculateKW(
     (ventilatorVolumeSupply * totalPressureLoss) / 1020 / ventilatorEfficiency
   );
 }
+function saveCalculations() {
+  fetch('http://localhost:35735/save-calculations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      calculations: getCalculatedValues(),
+    }),
+  }).then(response => {
+    if (!response.ok) {
+      console.error('Failed to save calculations');
+    }
+  });
+}
+
+function saveProject() {
+  fetch('http://localhost:35735/save-project', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      calculations: getCalculatedValues(),
+    }),
+  }).then(response => {
+    if (!response.ok) {
+      console.error('Failed to save project');
+    }
+  });
+}
 
 function performCalculations() {
  a0 = parseFloat(document.getElementById("AirVolume").value);
@@ -220,15 +251,8 @@ fricCoeffInt = parseFloat(
   document.getElementById("TotalPressureLoss").value =
     totalPressureLoss.toFixed(2);
   document.getElementById("MinimumInstCapacity").value = kw.toFixed(2);
+  projectName = document.getElementById("ProjectName").value;
 
-
-  fetch('http://localhost:35735/save-calculations', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(getCalculatedValues()),
-});
 
 }
 
@@ -250,22 +274,20 @@ function getCalculatedValues() {
     additLosses: additLosses,
     totalPressureLoss: totalPressureLoss,
     kw: kw,
+    projectName: projectName
   };
 }
 
 document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('Save').addEventListener('click', function() {
-    fetch('http://localhost:35735/save-calculations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(getCalculatedValues()),
-    }).then(() => {
-      // Open the PDF in a new tab
-      window.open('http://localhost:35735/generate-pdf', '_blank');
-    });
+    // Saving calculations when Save button clicked
+    saveProject();
   });
-  
-  
+});
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('Generate').addEventListener('click', function() {
+    // Open the PDF in a new tab
+    saveCalculations();
+    window.open('http://localhost:35735/generate-pdf', '_blank');
+  });
 });

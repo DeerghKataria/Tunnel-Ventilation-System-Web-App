@@ -169,20 +169,29 @@ function saveCalculations() {
 }
 
 function saveProject() {
-  fetch("http://localhost:35735/save-project", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      calculations: getCalculatedValues(),
-    }),
-  }).then((response) => {
-    if (!response.ok) {
-      console.error("Failed to save project");
-    }
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:35735/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        calculations: getCalculatedValues(),
+      }),
+    })
+    .then((response) => {
+      if (response.ok) {
+        resolve(); // If the response was OK, resolve the Promise
+      } else {
+        reject(new Error("Failed to save project")); // If there was an error, reject the Promise
+      }
+    })
+    .catch((error) => {
+      reject(new Error(`Fetch error: ${error}`)); // If there was an error with the fetch request, reject the Promise
+    });
   });
 }
+
 
 function performCalculations() {
   a0 = parseFloat(document.getElementById("AirVolume").value);
@@ -302,7 +311,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const field1 = document.getElementById("ProjectName");
 
     // Saving calculations when Save button clicked
-    saveProject();
+    saveProject()
+      .then(() => {
+        alert("Save Successful"); // This will be called if the Promise resolves successfully
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Error: Save Failed"); // This will be called if the Promise is rejected
+      });
   });
 });
 document.addEventListener("DOMContentLoaded", function () {
@@ -329,24 +345,8 @@ document.addEventListener("DOMContentLoaded", function () {
   projectDate = formattedDate;
 });
 
-window.onload = function () {
-  fetch("/api/user")
-    .then((response) => response.json())
-    .then((user) => {
-      const adminPanel = document.getElementById("adminPanel");
-      if (user.isAdmin) {
-        adminPanel.style.display = "block";
-      }
-    });
 
-  document.getElementById("FrictionCoefficient").value = 0.018;
-  document.getElementById("Leakage").value = 10;
-  document.getElementById("SiteHeightM").value = 50;
-  document.getElementById("Temperature").value = 20;
-  document.getElementById("PressureatDuctEnd").value = 100;
-  document.getElementById("VentilatorEfficiency").value = 0.8;
-  document.getElementById("ZetaLossFactor").value = 1;
-};
+
 
 window.addEventListener("DOMContentLoaded", (event) => {
   // Get the "Project Name" input field and the buttons
@@ -369,24 +369,38 @@ window.addEventListener("DOMContentLoaded", (event) => {
 });
 
 
-document.addEventListener("DOMContentLoaded", function () {
-  window.onload = async () => {
-    try {
-      const response = await fetch('http://localhost:35735/new-project', { method: 'POST' });
-      if (response.ok) {
-        const data = await response.json();
-        // Store the project number in session data
-        sessionStorage.setItem('projectNumber', data.projectNumber);
-        console.log(`Project Number: ${data.projectNumber} saved to session.`);
+document.addEventListener("DOMContentLoaded", async function () {
+  try {
+    const response = await fetch('http://localhost:35735/new-project', { method: 'POST' });
+    if (response.ok) {
+      const data = await response.json();
+      // Store the project number in session data
+      sessionStorage.setItem('projectNumber', data.projectNumber);
+      console.log(`Project Number: ${data.projectNumber} saved to session.`);
 
-        // Set the value of the ProjectNumber field
-        document.getElementById('ProjectNumber').value = data.projectNumber;
-      } else {
-        console.log('Error: ', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error:', error);
+      // Set the value of the ProjectNumber field
+      document.getElementById('ProjectNumber').value = data.projectNumber;
+    } else {
+      console.log('Error: ', response.status, response.statusText);
     }
+  } catch (error) {
+    console.error('Error:', error);
   }
-});
 
+  fetch("/api/user")
+    .then((response) => response.json())
+    .then((user) => {
+      const adminConsoleButton = document.getElementById("adminConsoleButton");
+      if (user.isAdmin) {
+        adminConsoleButton.style.display = "block";
+      }
+    });
+
+  document.getElementById("FrictionCoefficient").value = 0.018;
+  document.getElementById("Leakage").value = 10;
+  document.getElementById("SiteHeightM").value = 50;
+  document.getElementById("Temperature").value = 20;
+  document.getElementById("PressureatDuctEnd").value = 100;
+  document.getElementById("VentilatorEfficiency").value = 0.8;
+  document.getElementById("ZetaLossFactor").value = 1;
+});

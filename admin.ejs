@@ -25,6 +25,7 @@
     <table>
       <tr>
         <th>Date</th>
+        <th>Project Number</th>
         <th>Project Name</th>
         <th>Link</th>
       </tr>
@@ -32,6 +33,7 @@
         <% if (projects[i].calculations && projects[i].calculations.projectName) { %>
           <tr>
             <td><%= projects[i].calculations.projectDate %></td>
+            <td><%= projects[i].calculations.projectNumber %></td>
             <td><%= projects[i].calculations.projectName %></td>
             <td><a href="<%= projects[i].pdfUrl %>" target="_blank">Download PDF</a></td>
           </tr>

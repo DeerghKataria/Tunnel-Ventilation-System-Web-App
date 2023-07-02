@@ -10,6 +10,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public'))); // Add this line here
 
 app.use(bodyParser.json()); // support parsing of application/json type post data
@@ -32,6 +33,9 @@ app.listen(35735, () => {
   console.log("Server is running on port 35735");
 });
 
+app.get('/', function(req, res) {
+  res.redirect('/login');
+});
 // User Authentication routes
 const url = "mongodb+srv://hitesh_khanna:AnandMincons@cluster0.sc5xhui.mongodb.net/";
 const dbName = "AnandMincons"; // REPLACE WITH YOUR DATABASE NAME

@@ -1,5 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 body {
-    font-family: sans-serif;
+  font-family: "Roboto", sans-serif;
     font-size: 16px;
     margin: 0;
     padding: 0;
@@ -26,11 +27,14 @@ body {
   
   .ProjectDetails, .InputDetails, .OutputDetails {
     float: left;
+    height: 1000px;
+    margin: 60px;
   }
 
   
-  h1 {
-    text-align: center;
+  .AnandMinconsLogo{
+    margin-left: 700px;
+    margin-top: 50px;
   }
   
   h2 {
@@ -51,26 +55,90 @@ body {
     margin-bottom: 10px;
   }
   
-  .Calculate, .Save, .Update {
-    background-color: #000;
-    color: #fff;
-    padding: 2px;
-    border: none;
-    margin: 30px;
-    cursor: pointer;
-    text-align: center;
-    width: 100px;
-    float: left;
-  }
-  
-  .Calculate:hover, .Save:hover, .Update:hover {
-    background-color: #339966;
-  }
-  
-  /* Center the buttons at the bottom */
+   /* Center the buttons at the bottom */
   .EndButtons {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 100px;
+    align-items: center;
+    margin: 0;
+    position: absolute;
+    top: 150%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
+
+  .Calculate, .Save, .Generate{
+    margin-top: 30px;
+    margin: 60px;
+    text-align: center;
+    width: 150px;
+    float: left;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 4px;
+    color: black;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+  }
+
+  .Logout{
+    /* margin: 60px; */
+    text-align: center;
+    width: 150px;
+    float: left;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 2px;
+    color: black;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    align-items: center;
+    margin: 0;
+    position: absolute;
+    top: 165%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  
+  .Calculate:hover, .Save:hover, .Generate:hover{
+    background-color: #339966;
+  }
+  
+ 
+#CompanyName, #ProjectName, #TunnelName, #ProjectNumber, #ProjectDate,
+#Application, #PersoninCharge, #Customer, #FrictionCoefficient,
+#Leakage, #SiteHeightM, #Temperature, #AirVolume, #PressureatDuctEnd,
+#DuctLength, #DuctDiameter, #VentilatorEfficiency, #ZetaLossFactor,
+#AirDensity, #LDFactor, #PressureFactora1, #LossFactor,
+#VentilatorVolumeSupply, #StatPressureLoss, #DynPressureLoss,
+#AdditLosses, #TotalPressureLoss, #MinimumInstCapacity{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+body {
+  background-color: #b95305;
+  background-image: linear-gradient(90deg,#535bb9,#df7320);
+  background-size: cover;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
   

@@ -6,12 +6,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>ANAND MINCONS</h1>
+    <div class="AnandMinconsLogo">
+        <img src="anand_mincons_logo.png" alt="ANAND MINCONS"/>
+    </div>
     <form action="/calculate" method="post">    <!-- This is used to collect input from the user -->
 
     <div class="ClientInput">
         <!-- This is for Creating the Box of Project Details -->
-        <div class="ProjectDetails" style="border: 1px solid gray; text-align: left;">
+        <div class="ProjectDetails" style="border: 1px solid gray; text-align: left;
+        background-color: white;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);">
             <h2>PROJECT PARAMETERS</h2>
             <div class="Company Name" style="margin: 10px;">
                 <label for="Company Name">Company Name</label>
@@ -20,7 +24,7 @@
 
             <div class="Project Name" style="margin: 10px;">
                 <label for="Project Name">Project Name</label>
-                <input type="text" name="Project Name" id="ProjectName"/>
+                <input type="text" id="ProjectName" name="Project Name" />
             </div>
 
             <div class="Tunnel Name" style="margin: 10px;">
@@ -73,7 +77,9 @@
             </div>
         </div>
         <!-- This is for Creating the Box of Input -->
-        <div class="InputDetails" style="border: 1px solid gray; text-align: left;">
+        <div class="InputDetails" style="border: 1px solid gray; text-align: left;
+        background-color: white;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);">
             <h2>INPUT DETAILS</h2>
             <div class="FrictionCoefficient" style="margin: 10px;">
                 <label for="FrictionCoefficient">Friction Coefficient</label>      
@@ -127,7 +133,9 @@
         </div>
 
         <!-- This is for Creating the Box of Output -->
-        <div class="OutputDetails" style="border: 1px solid gray; text-align: left;">
+        <div class="OutputDetails" style="border: 1px solid gray; text-align: left;
+        background-color: white;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);">
             <h2>OUTPUT</h2>
             <div class="AirDensity" style="margin: 10px;"> 
                 <label for="AirDensity">Air Density [kgm-3]</label>      

@@ -9,6 +9,8 @@ const session = require("express-session");
 const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const { ObjectId } = require('mongodb');
+
 
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public'))); // Add this line here
@@ -32,6 +34,7 @@ let calculationsData = null;
 app.listen(35735, () => {
   console.log("Server is running on port 35735");
 });
+
 
 app.get('/', function(req, res) {
   res.redirect('/login');
@@ -128,31 +131,7 @@ function checkAuthenticated(req, res, next) {
 app.use(checkAuthenticated);
 app.use(express.static(path.join(__dirname)));
 
-app.get('/generate-pdf', async (req, res) => {
-  const client = new MongoClient(url);
-  let calculatedValues = null;
 
-  try {
-    await client.connect();
-    const db = client.db(dbName);
-    const calculations = db.collection('Calculations');
-    // Get the latest document in the collection
-    calculatedValues = await calculations.find().sort({ createdAt: -1 }).limit(1).next();
-    console.log('Calc Values');
-    console.log(calculatedValues);
-  } catch (err) {
-    console.error('Error retrieving calculations:', err);
-  } finally {
-    await client.close();
-  }
-
-  // Check if calculatedValues.data exists and pass it to the template
-  if (calculatedValues && calculatedValues.data) {
-    res.render('template', { calculatedValues: calculatedValues.data.calculations });
-  } else {
-    res.status(500).send('Error: No data found for PDF generation');
-  }
-});
 
 
 app.get('/admin', async (req, res) => {
@@ -232,6 +211,32 @@ async function generatePdf(calculatedValues) {
   });
 }
 
+app.get('/generate-pdf', async (req, res) => {
+  const client = new MongoClient(url);
+  let calculatedValues = null;
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const calculations = db.collection('Calculations');
+    // Get the latest document in the collection
+    calculatedValues = await calculations.find().sort({ createdAt: -1 }).limit(1).next();
+    console.log('Calc Values');
+    console.log(calculatedValues);
+  } catch (err) {
+    console.error('Error retrieving calculations:', err);
+  } finally {
+    await client.close();
+  }
+
+  // Check if calculatedValues.data exists and pass it to the template
+  if (calculatedValues && calculatedValues.data) {
+    res.render('template', { calculatedValues: calculatedValues.data.calculations });
+  } else {
+    res.status(500).send('Error: No data found for PDF generation');
+  }
+});
+
 
 app.post('/save-project', async (req, res) => {
   const {calculations } = req.body;
@@ -268,6 +273,8 @@ app.post('/save-project', async (req, res) => {
     await client.close();
   }
 });
+
+
 
 
 app.get('/api/user', function (req, res) {

@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Admin Page</title>
+  <link rel="stylesheet" href="styleadminpage.css" />
   <style>
     .header {
       display: flex;
@@ -26,7 +27,9 @@
       <tr>
         <th>Date</th>
         <th>Project Number</th>
+        <th>Company Name</th>
         <th>Project Name</th>
+        <th>Tunnel Name</th>
         <th>Link</th>
       </tr>
       <% for(let i=0; i<projects.length; i++) { %>
@@ -34,8 +37,10 @@
           <tr>
             <td><%= projects[i].calculations.projectDate %></td>
             <td><%= projects[i].calculations.projectNumber %></td>
+            <td><%= projects[i].calculations.companyName %></td>
             <td><%= projects[i].calculations.projectName %></td>
-            <td><a href="<%= projects[i].pdfUrl %>" target="_blank">Download PDF</a></td>
+            <td><%= projects[i].calculations.tunnelName %></td>
+            <td><a href="/download-pdf/<%= projects[i]._id %>" target="_blank">Download PDF</a></td>
           </tr>
         <% } %>
       <% } %>

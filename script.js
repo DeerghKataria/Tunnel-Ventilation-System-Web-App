@@ -23,7 +23,6 @@ let totalPressureLoss;
 let kw;
 let projectName;
 let projectDate;
-
 function calculateLossFactor() {
   let fricCoeffInt = parseFloat(
       document.getElementById("FrictionCoefficient").value
@@ -404,3 +403,5 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("VentilatorEfficiency").value = 0.8;
   document.getElementById("ZetaLossFactor").value = 1;
 });
+
+

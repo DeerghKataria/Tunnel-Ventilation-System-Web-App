@@ -6,12 +6,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="AnandMinconsLogo">
-        <img src="anand_mincons_logo.png" alt="ANAND MINCONS"/>
-    </div>
+    <div class="Main">
+        <div class="AnandMinconsLogo">
+            <img src="anand_mincons_logo.png" alt="ANAND MINCONS"/>
+        </div>
+        <div class="Content">
     <form action="/calculate" method="post">    <!-- This is used to collect input from the user -->
 
     <div class="ClientInput">
+        <div class="container">
         <!-- This is for Creating the Box of Project Details -->
         <div class="ProjectDetails" style="border: 1px solid gray; text-align: left;
         background-color: white;
@@ -55,9 +58,9 @@
             <div class="Duct Classification" style="margin: 10px;">
                 <label for="Duct Classification">Duct Classification</label>
                 <select name="Duct Classification">
-                <option value="Option1">A</option>
-                <option value="Option2">B</option>
-                <option value="Option3">X</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="X">X</option>
                 </select>
             </div>
 
@@ -188,6 +191,7 @@
             </div>
         </div>
     </div>
+</div>
        
     <!-- This is for the Buttons at the End -->
     <div class = "EndButtons">
@@ -205,6 +209,8 @@
     </div>
 </div>
     </form>
+</div>
+</div>
     <div class="Logout">
         <button onclick="location.href='/logout'">Logout</button>
         <a id="adminConsoleButton" href="/admin" style="display: none;">
@@ -212,5 +218,7 @@
           </a>
           
     </div>
+</div>
+
 </body>
 </html>

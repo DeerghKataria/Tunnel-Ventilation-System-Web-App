@@ -1,144 +1,131 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 body {
   font-family: "Roboto", sans-serif;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .ClientInput, .EndButtons{
-    float: left;
-  }
-
-  .ProjectDetails {
-    margin: 10px;
-    width: 500px;
-  }
-  
-  .InputDetails {
-    margin: 10px;
-    width: 500px;
-  }
-  
-  .OutputDetails {
-    margin: 10px;
-    width: 500px;
-  }
-  
-  .ProjectDetails, .InputDetails, .OutputDetails {
-    float: left;
-    height: 1000px;
-    margin: 60px;
-  }
-
-  
-  .AnandMinconsLogo{
-    margin-left: 700px;
-    margin-top: 50px;
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  label {
-    font-weight: bold;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .column {
-    margin-bottom: 10px;
-  }
-  
-   /* Center the buttons at the bottom */
-  .EndButtons {
-    display: flex;
-    justify-content: center;
-    margin-top: 100px;
-    align-items: center;
-    margin: 0;
-    position: absolute;
-    top: 150%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-
-  .Calculate, .Save, .Generate{
-    margin-top: 30px;
-    margin: 60px;
-    text-align: center;
-    width: 150px;
-    float: left;
-    font-family: "Roboto", sans-serif;
-    font-size: 16px;
-    text-transform: uppercase;
-    padding: 4px;
-    color: black;
-    -webkit-transition: all 0.3 ease;
-    transition: all 0.3 ease;
-    cursor: pointer;
-  }
-
-  .Logout{
-    /* margin: 60px; */
-    text-align: center;
-    width: 150px;
-    float: left;
-    font-family: "Roboto", sans-serif;
-    font-size: 16px;
-    text-transform: uppercase;
-    padding: 2px;
-    color: black;
-    -webkit-transition: all 0.3 ease;
-    transition: all 0.3 ease;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px;
-    align-items: center;
-    margin: 0;
-    position: absolute;
-    top: 165%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-  
-  .Calculate:hover, .Save:hover, .Generate:hover{
-    background-color: #339966;
-  }
-  
- 
-#CompanyName, #ProjectName, #TunnelName, #ProjectNumber, #ProjectDate,
-#Application, #PersoninCharge, #Customer, #FrictionCoefficient,
-#Leakage, #SiteHeightM, #Temperature, #AirVolume, #PressureatDuctEnd,
-#DuctLength, #DuctDiameter, #VentilatorEfficiency, #ZetaLossFactor,
-#AirDensity, #LDFactor, #PressureFactora1, #LossFactor,
-#VentilatorVolumeSupply, #StatPressureLoss, #DynPressureLoss,
-#AdditLosses, #TotalPressureLoss, #MinimumInstCapacity{
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #f2f2f2;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-
-body {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
   background-color: #b95305;
   background-image: linear-gradient(90deg,#535bb9,#df7320);
   background-size: cover;
-  font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
-  
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-top: 80px;
+}
+
+.ProjectDetails, .InputDetails, .OutputDetails {
+  flex: 1;
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.AnandMinconsLogo {
+  text-align: center;
+  margin: 30px;
+}
+
+.EndButtons {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.EndButtons input[type="button"], .Logout button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #535bb9;
+  color: #fff;
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+.EndButtons input[type="button"]:hover, .Logout button:hover {
+  background: #df7320;
+  transform: scale(1.05);
+}
+
+.Logout {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+form label, form input, form select {
+  display: block;
+  margin-bottom: 10px;
+}
+
+h2 {
+  text-align: center;
+  color: #535bb9;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type="button"] {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  padding: 10px;
+  color: black;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+input[type="button"]:hover {
+  background-color: #339966;
+  color: #fff;
+}
+
+/* Existing CSS */
+
+/* Add a transition to the login button */
+input[type="button"] {
+  transition: all 0.5s cubic-bezier(.17,.67,.83,.67);
+}
+
+/* Create a hover effect for the login button */
+input[type="button"]:hover {
+  background-color: #339966;
+  color: #fff;
+  box-shadow: 0px 12px 20px -10px rgba(0, 0, 0, 0.25), 
+              0px 17px 50px -10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Create an active (on click) effect for the login button */
+input[type="button"]:active {
+  transform: translateY(-1px);
+  box-shadow: 0px 7px 14px -6px rgba(0, 0, 0, 0.4);
+}
+
+/* Animate the login button when the page loads */
+@keyframes buttonEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input[type="button"] {
+  animation: buttonEntrance 1s ease-out;
+}
+

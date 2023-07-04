@@ -2,13 +2,54 @@
 <html>
   <head>
     <title>PDF Result</title>
+    <style>
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #535bb9;
+        color: white;
+      }
+    </style>
   </head>
   <body>
     <h1>Results</h1>
+    <img src="<%= getAssetPath('anand_mincons_logo.png') %>" alt="Logo" />
     <p>Date: <%= calculatedValues.projectDate%></p>
-    <p>Air Density: <%= (calculatedValues.airDensity).toFixed(2) %></p>
-    <p>LD Factor: <%= (calculatedValues.ldFactor).toFixed(2) %></p>
-    <p>Pressure Factor: <%= (calculatedValues.pressureFactor).toFixed(2) %></p>
-    <!-- Add all the other properties in similar fashion -->
+    <table>
+      <tr>
+        <th>Parameter</th>
+        <th>Input Value</th>
+        <th>Output Value</th>
+      </tr>
+      <tr>
+        <td>Air Density</td>
+        <td><!-- INPUT VALUE --></td>
+        <td><%= (calculatedValues.airDensity).toFixed(2) %></td>
+      </tr>
+      <tr>
+        <td>LD Factor</td>
+        <td><!-- INPUT VALUE --></td>
+        <td><%= (calculatedValues.ldFactor).toFixed(2) %></td>
+      </tr>
+      <tr>
+        <td>Pressure Factor</td>
+        <td><!-- INPUT VALUE --></td>
+        <td><%= (calculatedValues.pressureFactor).toFixed(2) %></td>
+      </tr>
+      <!-- Add more rows for additional properties -->
+    </table>
   </body>
 </html>

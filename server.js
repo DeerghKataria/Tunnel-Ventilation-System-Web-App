@@ -10,6 +10,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { ObjectId } = require('mongodb');
+const PDFDocument = require('pdfkit');
 
 
 app.use(express.static('public'));
@@ -198,7 +199,7 @@ async function generatePdf(calculatedValues) {
         const page = await browser.newPage();
       
         await page.setContent(html);
-        const pdfBuffer = await page.pdf({ format: 'A4' });
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
       
         await browser.close();
 
@@ -239,7 +240,8 @@ app.get('/generate-pdf', async (req, res) => {
 
 
 app.post('/save-project', async (req, res) => {
-  const {calculations } = req.body;
+  console.log(req);
+  const { calculations } = req.body;
 
   // Generate and save PDF
   console.log("Showing Calculations");
@@ -252,10 +254,13 @@ app.post('/save-project', async (req, res) => {
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  const pdfPath = path.join(dir, `${calculations.projectName}.pdf`);
+  // Assume that calculations has a projectId
+  const projectId = calculations.projectNumber;
+  
+  const pdfPath = path.join(dir, `${projectId}.pdf`);
   fs.writeFileSync(pdfPath, pdfBuffer);
 
-  const pdfUrl = `/pdfs/${calculations.projectName}.pdf`;
+  const pdfUrl = `/pdfs/${projectId}.pdf`;
 
   const client = new MongoClient(url);
   try {
@@ -273,6 +278,7 @@ app.post('/save-project', async (req, res) => {
     await client.close();
   }
 });
+
 
 
 
@@ -323,3 +329,78 @@ app.post('/new-project', async (req, res) => {
 
   await client.close();
 });
+
+
+
+
+
+app.get('/download-pdf/:projectId', async (req, res) => {
+  let projectId = req.params.projectId;
+  const client = new MongoClient(url);
+  
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const projects = db.collection('PDF-Data');
+    const project = await projects.findOne({ _id: new ObjectId(projectId) });
+
+    if (!project) {
+      console.error('Project does not exist:', projectId);
+      return res.status(404).send('Project does not exist');
+    }
+
+    let calculations = project.calculations;
+
+    // Read the template files
+    let html = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+
+    // Generate table rows
+    let rows = `
+      <tr>
+        <td>Air Density</td>
+        <td></td>
+        <td>${calculations.airDensity.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>LD Factor</td>
+        <td></td>
+        <td>${calculations.ldFactor.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>Pressure Factor</td>
+        <td></td>
+        <td>${calculations.pressureFactor.toFixed(2)}</td>
+      </tr>
+      <!-- Add more rows for additional properties -->
+    `;
+
+    // Inject the date and table rows into the template
+    html = html.replace('<p id="date"></p>', `<p id="date">Date: ${calculations.projectDate}</p>`);
+    html = html.replace('<!-- Content will be added dynamically -->', rows);
+
+    // Launch Puppeteer
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Set the HTML content and render as PDF
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    const pdf = await page.pdf({ format: 'A4' });
+
+    // Set headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename=${calculations.projectNumber}.pdf`);
+
+    // Send the PDF
+    res.send(pdf);
+
+    await browser.close();
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+    res.status(500).send('Error connecting to MongoDB');
+  } finally {
+    await client.close();
+  }
+});
+
+
+

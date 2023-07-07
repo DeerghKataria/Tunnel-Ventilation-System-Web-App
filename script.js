@@ -308,7 +308,8 @@ function performCalculations() {
         default: return '';
     }
   }
-  document.getElementById('CostOfElectricity').value = `${currency()} ${costOfElectricty}`;
+  costOfElectricty = `${currency()} ${costOfElectricty}`
+  document.getElementById('CostOfElectricity').value = costOfElectricty;
 }
 
 document.addEventListener("DOMContentLoaded", async function () {

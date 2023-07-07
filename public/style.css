@@ -33,8 +33,9 @@ body {
 
 .EndButtons {
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .EndButtons input[type="button"], .Logout button {
@@ -53,11 +54,6 @@ body {
   transform: scale(1.05);
 }
 
-.Logout {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
 
 form label, form input, form select {
   display: block;
@@ -232,4 +228,67 @@ input[type="button"] {
   margin-top: 10px;
   margin-bottom: 20px;
   
+}
+
+.calc-container {
+  display: flex;
+  align-items: start;
+  justify-content: center; /* Centers the items horizontally */
+  gap: 10px;
+  /* Remove these lines to shrink the container to its content
+  padding: 50px 200px;
+  margin-top: 20px; */
+  flex: 0; /* Don't grow or shrink */
+  margin: 0px ; /* Centers the container vertically */
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+#textField {
+ 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: bolder;
+  font-size: 16px;
+  width: auto; /* Set a fixed width */
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+
+#dropdownMenu {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: bolder;
+  font-size: 16px;
+  height: auto;
+  width: auto; /* Set a fixed width */
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+
+#calculate {
+  padding: 11px 5px;
+  border: none;
+  border-radius: 5px;
+  background: #535bb9;
+  color: #fff;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-top: 3px;
+  margin-bottom: 0px;
+}
+
+
+
+.button-container, .Logout {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }

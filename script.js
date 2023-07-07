@@ -31,7 +31,6 @@ let htmlText;
 let costOfElectricty;
 let electricPowerPrice;
 let durationDays;
-
 var toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
   ['blockquote', 'code-block'],
@@ -312,12 +311,6 @@ function performCalculations() {
   document.getElementById('CostOfElectricity').value = costOfElectricty;
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
-  document.getElementById("Calculate").addEventListener("click", async function () {
-    await performCalculations();
-    saveCalculations();
-  });
-});
 
 
 
@@ -330,7 +323,7 @@ function getCalculatedValues() {
     excavationType: document.querySelector('select[name="TypeofExcavation"]').value,
     projectNumber: document.getElementById('ProjectNumber').value,
     projectDate: projectDate,
-    ductClassification:document.querySelector('select[name="Duct Classification"]').value,
+    ductClassification:document.querySelector('select[name="DuctClassification"]').value,
     application: document.getElementById('Application').value,
     personIncharge: document.getElementById('PersoninCharge').value,
     customer: document.getElementById('Customer').value,
@@ -340,6 +333,7 @@ function getCalculatedValues() {
     leakage: leakage,
     siteHeight: siteHeight,
     temperature: temperature,
+    airVolAtFront: a0,
     pressureAtDuctEnd: pressureAtDuctEnd,
     ventilatorEfficiency: ventilatorEfficiency,
     zetaLossFactor: zetaLossFactor,
@@ -358,6 +352,13 @@ function getCalculatedValues() {
     
   };
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("Calculate").addEventListener("click", async function () {
+    await performCalculations();
+    saveCalculations();
+  });
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("Save").addEventListener("click", function () {
@@ -523,3 +524,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   RAV.addEventListener('input', calculateVolume); // Listen for input changes in RAV as well
   Area.addEventListener('input', calculateVolume);
 });
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+  let ductClassification = document.querySelector('select[name="DuctClassification"]');
+
+  function changeInputValues(){
+
+    let type = ductClassification.value;
+    if(type == 'A'){
+      document.getElementById("FrictionCoefficient").value = 0.018;
+      document.getElementById("Leakage").value = 10;
+    }
+    else if(type == 'B'){
+      document.getElementById("FrictionCoefficient").value = 0.024;
+      document.getElementById("Leakage").value = 20;
+    }
+    else if(type == 'X'){
+      document.getElementById("FrictionCoefficient").value = 0.02;
+      document.getElementById("Leakage").value = 10;
+    }
+  }
+
+  ductClassification.addEventListener('change',changeInputValues);
+})

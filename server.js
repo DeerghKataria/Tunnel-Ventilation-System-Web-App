@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { ObjectId } = require('mongodb');
 const { QuillDeltaToHtmlConverter } = require('quill-delta-to-html');
-const axios = require('axios');
+
 
 
 app.use(express.static('public'));
@@ -418,8 +418,4 @@ app.get('/download-pdf/:projectId', async (req, res) => {
   }
 });
 
-app.post('/calculate', (req, res) => {
-  console.log(req.body);
-  
-});
 

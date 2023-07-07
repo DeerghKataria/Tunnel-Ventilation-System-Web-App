@@ -10,7 +10,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { ObjectId } = require('mongodb');
-const PDFDocument = require('pdfkit');
+const { QuillDeltaToHtmlConverter } = require('quill-delta-to-html');
+const axios = require('axios');
 
 
 app.use(express.static('public'));
@@ -212,33 +213,6 @@ async function generatePdf(calculatedValues) {
   });
 }
 
-app.get('/generate-pdf', async (req, res) => {
-  const client = new MongoClient(url);
-  let calculatedValues = null;
-
-  try {
-    await client.connect();
-    const db = client.db(dbName);
-    const calculations = db.collection('Calculations');
-    // Get the latest document in the collection
-    calculatedValues = await calculations.find().sort({ createdAt: -1 }).limit(1).next();
-    console.log('Calc Values');
-    console.log(calculatedValues);
-  } catch (err) {
-    console.error('Error retrieving calculations:', err);
-  } finally {
-    await client.close();
-  }
-
-  // Check if calculatedValues.data exists and pass it to the template
-  if (calculatedValues && calculatedValues.data) {
-    res.render('template', { calculatedValues: calculatedValues.data.calculations });
-  } else {
-    res.status(500).send('Error: No data found for PDF generation');
-  }
-});
-
-
 app.post('/save-project', async (req, res) => {
   console.log(req);
   const { calculations } = req.body;
@@ -276,6 +250,48 @@ app.post('/save-project', async (req, res) => {
     res.sendStatus(200);
   } finally {
     await client.close();
+  }
+});
+
+
+
+app.get('/generate-pdf', async (req, res) => {
+  const client = new MongoClient(url);
+  let calculatedValues = null;
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const calculations = db.collection('Calculations');
+    // Get the latest document in the collection
+    calculatedValues = await calculations.find().sort({ createdAt: -1 }).limit(1).next();
+    console.log('Calc Values');
+    console.log(calculatedValues);
+    console.log(calculatedValues.data.calculations.text);
+
+   
+
+
+  } catch (err) {
+    console.error('Error retrieving calculations:', err);
+  } finally {
+    await client.close();
+  }
+
+  // Check if calculatedValues.data exists and pass it to the template
+  if (calculatedValues && calculatedValues.data) {
+
+    let deltaOps = calculatedValues.data.calculations.text; // your delta object
+    console.log(deltaOps);
+    let cfg = {};
+    console.log("hello");
+    let converter = new QuillDeltaToHtmlConverter(deltaOps.ops, cfg);
+    let html = converter.convert(); 
+    console.log(html); // logs the converted HTML to the console
+
+    res.render('template', { calculatedValues: calculatedValues.data.calculations ,htmlContent: html });
+  } else {
+    res.status(500).send('Error: No data found for PDF generation');
   }
 });
 

@@ -1,6 +1,6 @@
 body {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   margin: 0;
   padding: 0;
   background-color: #b95305;
@@ -11,8 +11,9 @@ body {
 .container {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  margin-top: 80px;
+  padding: 50px 200px;
+  margin-top: 20px;
+
 }
 
 .ProjectDetails, .InputDetails, .OutputDetails {
@@ -33,7 +34,7 @@ body {
 .EndButtons {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .EndButtons input[type="button"], .Logout button {
@@ -65,14 +66,22 @@ form label, form input, form select {
 
 h2 {
   text-align: center;
+  color: #df7320;
+}
+
+label {
+  font-weight: bold; /* Make all label text bold */
   color: #535bb9;
 }
 
+
 input[type="text"] {
-  width: 100%;
+  width: 80%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-weight: bolder;
+  font-size: 16px;
 }
 
 input[type="button"] {
@@ -129,3 +138,98 @@ input[type="button"] {
   animation: buttonEntrance 1s ease-out;
 }
 
+
+
+.RemarkBox {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 210px;
+  height: 400px;
+  
+}
+
+.RemarkBoxInner {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 20px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  height: 100%;
+}
+
+.ql-editor{
+  padding: 5px;
+}
+.ql-toolbar {
+  background-color: #f2f2f2;
+  border: 1px solid gray;
+  border-radius: 10px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  margin-bottom: 10px;
+}
+
+#editor {
+  flex: 1;
+  margin: 0px;
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  font-size: 16px;
+}
+
+.tunnel-dimension {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  margin-top: 20px;
+  padding-top: 10px;
+}
+
+.dimension {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px ;
+}
+
+.x {
+  margin: 0 10px;
+}
+
+.tunnel-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.detail label {
+  margin-bottom: 5px;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px;
+}
+
+#RAV {
+  height: 15px; /* Adjust this value to your preference */
+}
+
+.custom-select {
+  width: 150px; /* Adjust this value to your preference */
+}
+
+#typeoftunnel {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  
+}

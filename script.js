@@ -1,3 +1,4 @@
+
 let a0;
 let len;
 let dia;
@@ -23,6 +24,35 @@ let totalPressureLoss;
 let kw;
 let projectName;
 let projectDate;
+let quill; 
+let contents;
+let tempContainer;
+let htmlText;
+let costOfElectricty;
+let electricPowerPrice;
+let durationDays;
+
+var toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ 'header': 1 }, { 'header': 2 }],               // custom dropdown
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'direction': 'rtl' }],                         // text direction
+
+  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+
+  ['clean']                                         // remove formatting button
+];
+
+
 function calculateLossFactor() {
   let fricCoeffInt = parseFloat(
       document.getElementById("FrictionCoefficient").value
@@ -193,6 +223,8 @@ function saveProject() {
 
 
 function performCalculations() {
+  electricPowerPrice = parseFloat(document.getElementById('ElectricPowerPrice').value)
+  durationDays = parseFloat(document.getElementById('ProductionDays').value);
   a0 = parseFloat(document.getElementById("AirVolume").value);
   len = parseFloat(document.getElementById("DuctLength").value);
   dia = parseFloat(document.getElementById("DuctDiameter").value);
@@ -260,6 +292,23 @@ function performCalculations() {
     totalPressureLoss.toFixed(2);
   document.getElementById("MinimumInstCapacity").value = kw.toFixed(2);
   projectName = document.getElementById("ProjectName").value;
+
+  costOfElectricty = electricPowerPrice * durationDays;
+  let currency = function () {
+    let currencyCode = document.getElementById('CurrencyPerKWH').value;
+    switch(currencyCode) {
+        case 'INR': return '₹';
+        case 'USD': return '$';
+        case 'EUR': return '€';
+        case 'GBP': return '£';
+        case 'JPY': return '¥';
+        case 'CNY': return '¥';
+        case 'AUD': return 'A$';
+        // Add more currencies as needed
+        default: return '';
+    }
+  }
+  document.getElementById('CostOfElectricity').value = `${currency()} ${costOfElectricty}`;
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -268,6 +317,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     saveCalculations();
   });
 });
+
+
 
 function getCalculatedValues() {
   // Perform calculations and return the result as an object
@@ -301,6 +352,8 @@ function getCalculatedValues() {
     additLosses: additLosses,
     totalPressureLoss: totalPressureLoss,
     kw: kw,
+    costOfElectricty: costOfElectricty,
+    text: quill.getContents()
     
   };
 }
@@ -321,7 +374,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 document.addEventListener("DOMContentLoaded", function () {
+  quill = new Quill('#editor', {
+    modules: {
+      toolbar: toolbarOptions
+    },
+    theme: 'snow'
+  });
   document.getElementById("Generate").addEventListener("click", function () {
+    
+
     // Open the PDF in a new tab
     window.open("http://localhost:35735/generate-pdf", "_blank");
   });
@@ -405,3 +466,59 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 
+document.addEventListener("DOMContentLoaded", async function () {
+  // Your existing functions here...
+  let TunnelHeight = document.getElementById('TunnelHeight');
+  let TunnelWidth = document.getElementById('TunnelWidth');
+  let TypeofTunnel = document.querySelector('select[name="TypeofTunnel"]');
+  let RAV = document.getElementById('RAV');
+  let AirVolume = document.getElementById('AirVolume');
+  
+  let Area = document.getElementById('TunnelArea');
+
+  function calculateArea() {
+    let height = parseFloat(TunnelHeight.value);
+    let width = parseFloat(TunnelWidth.value);
+    let type = TypeofTunnel.value;
+    let area = parseFloat(Area.value);
+
+    if (!isNaN(height) && !isNaN(width) && type && type !== "") {
+      // Check that rav is a valid number
+  
+      if(type=="DShape"){
+         area = width * width * 0.8927;
+         Area.value = area.toFixed(2);
+      }
+
+      else{
+        area = width * width * 0.82932;
+        Area.value = area.toFixed(2);
+      }
+      calculateVolume();
+    }
+
+
+  }
+
+  function calculateVolume(){
+    
+    let area = parseFloat(Area.value);
+    let rav = parseFloat(RAV.value); // Get the value of the RAV input field
+    let volume;
+
+    if(!isNaN(area) && !isNaN(rav) ){
+      volume = area * rav;
+      AirVolume.value = volume.toFixed(2);
+    }
+
+
+  }
+
+  
+
+  TunnelHeight.addEventListener('input', calculateArea);
+  TunnelWidth.addEventListener('input', calculateArea);
+  TypeofTunnel.addEventListener('change', calculateArea);
+  RAV.addEventListener('input', calculateVolume); // Listen for input changes in RAV as well
+  Area.addEventListener('input', calculateVolume);
+});

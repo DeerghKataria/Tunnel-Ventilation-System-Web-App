@@ -40,7 +40,7 @@
             <td><%= projects[i].calculations.companyName %></td>
             <td><%= projects[i].calculations.projectName %></td>
             <td><%= projects[i].calculations.tunnelName %></td>
-            <td><a href="/download-pdf/<%= projects[i]._id %>" target="_blank">Download PDF</a></td>
+            <td><a href="/generate-pdf?id=<%= projects[i]._id %>&fileName=<%= projects[i].calculations.projectNumber %>" target="_blank">Download PDF</a></td>
           </tr>
         <% } %>
       <% } %>

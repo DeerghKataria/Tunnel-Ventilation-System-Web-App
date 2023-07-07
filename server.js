@@ -418,5 +418,8 @@ app.get('/download-pdf/:projectId', async (req, res) => {
   }
 });
 
-
+app.post('/calculate', (req, res) => {
+  console.log(req.body);
+  
+});
 

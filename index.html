@@ -13,7 +13,7 @@
             <img src="anand_mincons_logo.png" alt="ANAND MINCONS"/>
         </div>
         <div class="Content">
-    <form action="/calculate" method="post">    <!-- This is used to collect input from the user -->
+            <!-- This is used to collect input from the user -->
 
     <div class="ClientInput">
         <div class="container">
@@ -283,11 +283,13 @@
             <div>
                 <button onclick="location.href='/logout'">Logout</button>
             </div>
-            <div id="adminConsoleButton" href="/admin" style="display: none;">
-                <button>Admin Console</button>
+            <div id="adminConsoleButton" style="display: none;">
+                <a href="/admin">
+                    <button>Admin Console</button>
+                </a>
             </div>
-        </div>
     </div>
+    
 </div>
     </form>
 </div>

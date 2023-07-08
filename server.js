@@ -189,8 +189,15 @@ app.post("/save-calculations", async (req, res) => {
 
 async function generatePdf(calculatedValues) {
   return new Promise((resolve, reject) => {
-    // render your ejs template with data
-    ejs.renderFile(path.join(__dirname, 'template.ejs'), { calculatedValues }, async function(err, html){
+   let deltaOps = calculatedValues.text; // your delta object
+    console.log(deltaOps);
+    let cfg = {};
+    console.log("hello");
+    let converter = new QuillDeltaToHtmlConverter(deltaOps.ops, cfg);
+    let htmlContent = converter.convert(); 
+    console.log(htmlContent); // logs the converted HTML to the console
+
+    ejs.renderFile(path.join(__dirname, 'template.ejs'), { calculatedValues, htmlContent }, async function(err, html){
       if (err){
         console.error('Error in rendering ejs:', err);
         reject(err); // if there is an error, reject the Promise
@@ -422,3 +429,46 @@ app.get('/download-pdf/:projectId', async (req, res) => {
 
 //Changes
 
+app.get('/search', async (req, res) => {
+  const client = new MongoClient(url);
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const projects = db.collection('PDF-Data');
+
+    // Define the fields to search within
+    const searchFields = ['calculations.projectNumber', 'calculations.projectName', 'calculations.companyName', 'calculations.tunnelName','calculations.projectDate'];
+
+    // Create an array of search queries for each field
+    const searchQueries = searchFields.map(field => {
+      return { [field]: { $regex: new RegExp(req.query.query, "i") } };
+    });
+
+    // Use the $or operator to search in all fields
+    const searchQuery = { $or: searchQueries };
+
+    const matchingProjects = await projects.find(searchQuery).toArray();
+
+    res.json(matchingProjects);
+  } finally {
+    await client.close();
+  }
+});
+
+
+app.get('/all-projects', async (req, res) => {
+  const client = new MongoClient(url);
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const projects = db.collection('PDF-Data');
+
+    const allProjects = await projects.find({}).toArray();
+
+    res.json(allProjects);
+  } finally {
+    await client.close();
+  }
+});

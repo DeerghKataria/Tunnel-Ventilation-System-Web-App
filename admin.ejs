@@ -13,37 +13,75 @@
     .table-container {
       margin-top: 20px;
     }
+    .search-bar {
+      margin-right: 10px;
+    }
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Trigger an AJAX request to fetch all projects when the page loads
+      $.get('/all-projects', function(data) {
+        let htmlString = '<tr><th>Date</th><th>Project Number</th><th>Company Name</th><th>Project Name</th><th>Tunnel Name</th><th>Link</th></tr>';
+    
+        data.forEach(project => {
+          if (project.calculations && project.calculations.projectName) {
+            htmlString += `
+              <tr>
+                <td>${project.calculations.projectDate}</td>
+                <td>${project.calculations.projectNumber}</td>
+                <td>${project.calculations.companyName}</td>
+                <td>${project.calculations.projectName}</td>
+                <td>${project.calculations.tunnelName}</td>
+                <td><a href="/generate-pdf?id=${project._id}&fileName=${project.calculations.projectNumber}" target="_blank">Download PDF</a></td>
+              </tr>`;
+          }
+        });
+    
+        $('#project-table').html(htmlString);
+      });
+    
+      $('#search-input').on('input', function() {
+        var searchQuery = $(this).val();
+    
+        $.get('/search', { query: searchQuery }, function(data) {
+          let htmlString = '<tr><th>Date</th><th>Project Number</th><th>Company Name</th><th>Project Name</th><th>Tunnel Name</th><th>Link</th></tr>';
+    
+          data.forEach(project => {
+            if (project.calculations && project.calculations.projectName) {
+              htmlString += `
+                <tr>
+                  <td>${project.calculations.projectDate}</td>
+                  <td>${project.calculations.projectNumber}</td>
+                  <td>${project.calculations.companyName}</td>
+                  <td>${project.calculations.projectName}</td>
+                  <td>${project.calculations.tunnelName}</td>
+                  <td><a href="/generate-pdf?id=${project._id}&fileName=${project.calculations.projectNumber}" target="_blank">Download PDF</a></td>
+                </tr>`;
+            }
+          });
+    
+          $('#project-table').html(htmlString);
+        });
+      });
+    });
+    </script>
 </head>
 <body>
   <div class="header">
     <h1>Projects</h1>
+    <form class="search-bar">
+      <input type="search" id="search-input" name="query" placeholder="Search Projects..." />
+    </form>
+    <div class="button-group">
     <button onclick="location.href='/logout'">Logout</button>
     <button onclick="location.href='/index.html'">Calculate</button>
   </div>
+  </div>
 
   <div class="table-container">
-    <table>
-      <tr>
-        <th>Date</th>
-        <th>Project Number</th>
-        <th>Company Name</th>
-        <th>Project Name</th>
-        <th>Tunnel Name</th>
-        <th>Link</th>
-      </tr>
-      <% for(let i=0; i<projects.length; i++) { %>
-        <% if (projects[i].calculations && projects[i].calculations.projectName) { %>
-          <tr>
-            <td><%= projects[i].calculations.projectDate %></td>
-            <td><%= projects[i].calculations.projectNumber %></td>
-            <td><%= projects[i].calculations.companyName %></td>
-            <td><%= projects[i].calculations.projectName %></td>
-            <td><%= projects[i].calculations.tunnelName %></td>
-            <td><a href="/generate-pdf?id=<%= projects[i]._id %>&fileName=<%= projects[i].calculations.projectNumber %>" target="_blank">Download PDF</a></td>
-          </tr>
-        <% } %>
-      <% } %>
+    <table id="project-table">
+      <!-- The contents of this table will be replaced with the search results -->
     </table>
   </div>
 </body>

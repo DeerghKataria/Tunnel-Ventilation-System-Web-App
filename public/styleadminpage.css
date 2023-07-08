@@ -77,3 +77,23 @@ table a:hover {
   text-decoration: none;
   transform: scale(1.05);
 }
+
+.search-bar {
+  position: relative;
+  margin-right: 10px;
+}
+
+.search-bar input {
+  padding: 10px 20px 10px 40px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  color: #525FE1;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.header .button-group {
+  display: flex;
+  justify-content: space-between;
+}

@@ -322,6 +322,14 @@ function getCalculatedValues() {
     tunnelName: document.getElementById('TunnelName').value,
     excavationType: document.querySelector('select[name="TypeofExcavation"]').value,
     projectNumber: document.getElementById('ProjectNumber').value,
+    tunnelType: document.querySelector('select[name="TypeofTunnel"]').value,
+    tunnelArea:document.getElementById('TunnelArea').value,
+    tunnelHeight:document.getElementById('TunnelHeight').value,
+    tunnelWidth:document.getElementById('TunnelWidth').value,
+    rav:document.getElementById('RAV').value,
+    productionDays:document.getElementById('ProductionDays').value,
+    electricPowerPrice:document.getElementById('ElectricPowerPrice').value,
+    currency: document.querySelector('select[name="CurrencyPerKWH"]').value,
     projectDate: projectDate,
     ductClassification:document.querySelector('select[name="DuctClassification"]').value,
     application: document.getElementById('Application').value,
@@ -359,6 +367,9 @@ document.addEventListener("DOMContentLoaded", function () {
     saveCalculations();
   });
 });
+
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("Save").addEventListener("click", function () {

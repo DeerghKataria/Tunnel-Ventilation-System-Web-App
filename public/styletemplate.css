@@ -87,3 +87,9 @@ img {
 .project-parameters-right {
   width: 45%; /* Adjust as needed */
 }
+
+@media print {
+  .print-page-break {
+    page-break-before: always;
+  }
+}

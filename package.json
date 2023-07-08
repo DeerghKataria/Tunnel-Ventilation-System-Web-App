@@ -34,6 +34,7 @@
     "content-type": "^1.0.5",
     "cookie": "^0.5.0",
     "cookie-signature": "^1.0.6",
+    "cors": "^2.8.5",
     "cosmiconfig": "^8.2.0",
     "cross-fetch": "^3.1.6",
     "data-uri-to-buffer": "^5.0.1",

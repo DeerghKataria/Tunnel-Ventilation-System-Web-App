@@ -11,12 +11,13 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { ObjectId } = require('mongodb');
 const { QuillDeltaToHtmlConverter } = require('quill-delta-to-html');
+const cors = require('cors');
 
 
 
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public'))); // Add this line here
-
+app.use(cors());
 app.use(bodyParser.json()); // support parsing of application/json type post data
 app.use(bodyParser.urlencoded({ extended: true })); //support parsing of application/x-www-form-urlencoded post data
 
@@ -418,4 +419,6 @@ app.get('/download-pdf/:projectId', async (req, res) => {
   }
 });
 
+
+//Changes
 
